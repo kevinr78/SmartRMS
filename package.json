@@ -7,8 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "run-client": "echo \"Error: no test specified\" && exit 1",
-    "run-server": "echo \"Error: no test specified\" && exit 1"
+    "run-client": "cd client && npm start",
+    "run-server": "cd server && npm start"
   },
   "keywords": [],
   "author": "",
