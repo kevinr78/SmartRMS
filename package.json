@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "run-client": "cd client && npm start",
+    "run-client": "cd client && npm run dev",
     "run-server": "cd server && npm start"
   },
   "keywords": [],
