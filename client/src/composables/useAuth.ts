@@ -9,7 +9,7 @@ import type { User } from "../types/auth";
 export function useAuth(){
   const {apiCall} = useApi();
   const authStore = useAuthStore();
-  const {user, isAuthenticated,refreshToken, accessToken, isLoading} = storeToRefs(authStore);
+  const {user, isAuthenticated, isLoading} = storeToRefs(authStore);
   const {setUser, setTokens} = authStore;
   const authUser = computed(() => user);
   const userRole = computed<string>(() => user.value?.role || "resident");
