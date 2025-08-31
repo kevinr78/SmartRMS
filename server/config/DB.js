@@ -1,23 +1,29 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const clientOptions = {dbName:"flatmate_os", serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const clientOptions = {
+  dbName: "flatmate_os", 
+  serverApi: { version: '1', strict: true, deprecationErrors: true } 
+};
 
-async function run() {
+const connectDB = async () => {
   try {
     const uri = process.env.MONGODB_URI;
-    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+    if (!uri) {
+      throw new Error("MONGODB_URI is not defined in .env file");
+    }
+    
     await mongoose.connect(uri, clientOptions);
-    console.log(process.env.NODE_ENV)
-    await mongoose.connection.db.admin().command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await mongoose.disconnect();
+    console.log("You successfully connected to MongoDB!");
+
+  } catch (err) {
+    console.error("Failed to connect to MongoDB", err);
+    // Exit process with failure
+    process.exit(1); 
   }
-}
+};
 
-mongoose.connection.on('error',(err) =>{
+mongoose.connection.on('error', (err) => {
   console.log(err);
-})
+});
 
-export default run;
+export default connectDB;

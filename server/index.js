@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import run from './config/DB.js';
+import connectDB from './config/DB.js';
 import globalErrorHandler from './middleware/Error/errorHandler.js';
-import AppError from './utils/AppError.js';
 import cors from 'cors';
 import morgan from 'morgan';
 import fs from 'fs';
 import helmet from 'helmet';
 import path from 'path';
+import authRouter from './routes/auth.js';
 
 const app = express();
 
@@ -21,8 +21,7 @@ app.use(morgan('combined',{
 
 app.use(helmet());
 app.use(express.json());
-
-run();
+app.use('/auth', authRouter);
 
 // Handle undefined routes
 /* app.all("*", (req, res, next) => {
@@ -31,6 +30,20 @@ run();
 
 app.use(globalErrorHandler);
 
-app.listen(process.env.PORT || 3000, ()=>{
-  console.log("Server started succesfully")
-})
+const startServer = async () => {
+  try {
+    // 1. Connect to the database
+    await connectDB();
+
+    // 2. Start the server only after the DB is connected
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server started successfully on port ${PORT}`);
+    });
+
+  } catch (error) {
+    console.error("Failed to start the server", error);
+  }
+};
+
+startServer();
