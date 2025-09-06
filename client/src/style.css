@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --color-light-bg:'#f5f8fb';
+  --color-grey-text:'#a2acb9';
+  --color-slate-text:'#39465a';
+  --color-dark-obsidian:'#0f172a';
+}

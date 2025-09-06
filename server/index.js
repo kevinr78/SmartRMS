@@ -12,7 +12,9 @@ import authRouter from './routes/auth.js';
 const app = express();
 
 dotenv.config();
-cors();
+app.use(cors({
+  credentials:true
+}));
 app.use(morgan('combined',{
   stream:fs.createWriteStream(path.join(path.dirname(import.meta.filename),'access.log'),{
     flags:'a'
@@ -21,7 +23,7 @@ app.use(morgan('combined',{
 
 app.use(helmet());
 app.use(express.json());
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 // Handle undefined routes
 /* app.all("*", (req, res, next) => {

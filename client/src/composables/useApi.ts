@@ -1,7 +1,9 @@
 import type {Ref} from 'vue';
-
+import useNotifications from './useNotifications';
 export function useApi(){
   //const showError
+  const {showErrorToast} = useNotifications();
+
 
   async function apiCall<T>(
     apiFunction:() => Promise<T>,
@@ -11,24 +13,19 @@ export function useApi(){
       successMessage?: string
     } = {}
   ): Promise<T | null> {
-    const { showErrorToast = true, loadingRef, successMessage} = options;
+    
+    const {loadingRef, successMessage} = options;
     if(loadingRef) {
       loadingRef.value = true;
     }
 
     try {
       const result = await apiFunction();
-      if(successMessage) {
-        //show Toast
-      }
-
       return result;
     } catch (error: any) {
-      if(showErrorToast) {
         const message = error.response?.data.message || "Something Went wrong";
-        //showErrorToast(message);
-      }
-      throw error;
+        showErrorToast(message);
+        throw error;
     }finally{
       if(loadingRef) {
         loadingRef.value = false;
