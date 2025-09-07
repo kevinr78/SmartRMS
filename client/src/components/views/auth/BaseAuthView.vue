@@ -20,6 +20,9 @@ import useNotifications from "../../../composables/useNotifications";
 
 const { login, register } = useAuth();
 const { showErrorToast, showSuccessToast } = useNotifications();
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const currentView = ref("login");
 const showLoadingSpinner = ref(false);
 const view = {
@@ -46,6 +49,7 @@ async function handleFormSubmit(e) {
     }
 
     showSuccessToast(response.message);
+    router.push({path:'/home'})
   } catch (error) {
   } finally {
     showLoadingSpinner.value = false;

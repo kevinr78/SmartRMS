@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <BaseAuthView />
+    <router-view />
   </div>
 </template>
 <script setup>
@@ -17,16 +17,17 @@ html {
 }
 #app {
   font-family: 'Open Sans', sans-serif;
-  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   font-style: normal;
   font-optical-sizing: auto;
   height: 100%;
+  font-size: 14px;
 }
 
 body, .main{
   height: 100vh ;
+  background-color: #fafafa;
 }
 </style>

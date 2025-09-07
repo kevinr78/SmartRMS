@@ -2,8 +2,12 @@
 @plugin "daisyui";
 
 @theme {
-  --color-light-bg:'#f5f8fb';
-  --color-grey-text:'#a2acb9';
-  --color-slate-text:'#39465a';
-  --color-dark-obsidian:'#0f172a';
+  --color-blue-bg:#3275f1;
+  --color-blue-light-bg:#ebf3fc;
+  --color-secondary-text:#7b889c;
+  --color-tertiary-text:#95a0af;
+  --color-primary-text:#58585e;
+  --color-light-grey-bg:#f1f5f9;
+  --color-light-border:#eef2f7;
+  --color-light-blue:#dbeafe;
 }
