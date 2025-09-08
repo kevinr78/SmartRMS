@@ -24,6 +24,7 @@ html {
   font-optical-sizing: auto;
   height: 100%;
   font-size: 14px;
+  color: #58585e;
 }
 
 body, .main{
