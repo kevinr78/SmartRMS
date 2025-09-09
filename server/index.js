@@ -8,6 +8,7 @@ import fs from 'fs';
 import helmet from 'helmet';
 import path from 'path';
 import authRouter from './routes/auth.js';
+import householdRouter from './routes/household.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(morgan('combined',{
 app.use(helmet());
 app.use(express.json());
 app.use('/api/auth', authRouter);
+app.use('/api/household',householdRouter);
 
 // Handle undefined routes
 /* app.all("*", (req, res, next) => {

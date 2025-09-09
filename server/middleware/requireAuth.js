@@ -2,7 +2,7 @@ import AppError from "../utils/AppError.js";
 import JwtService from '../utils/jwt.js';
 
 const verifyUser = function(req,res,next){
-  const jwt = req.headers("Authorization").split(" ")[1];
+  const jwt = req.headers["authorization"].split(" ")[1];
   try {
     if(!jwt){
       throw new AppError("Unauthorized access", 401);
@@ -14,9 +14,11 @@ const verifyUser = function(req,res,next){
     }
 
     
-    req.user = user._id;
+    req.user = verifiedToken;
     next();
   } catch (error) {
     next(error)
   }
 }
+
+export default verifyUser
