@@ -14,11 +14,14 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = userData
   }
 
-  const setTokens = (token: string, refresh: string) => {
+  const setAccessToken = (token: string) => {
     accessToken.value = token
-    refreshToken.value = refresh
-    localStorage.setItem('token', accessToken.value)
-    localStorage.setItem('refreshToken', refresh)
+    localStorage.setItem('accessToken', token)
+  }
+
+  const setRefreshToken = (token:string) => {
+    refreshToken.value = token;
+    localStorage.setItem('refreshToken', token)
   }
 
   const clearAuth = () => {
@@ -37,6 +40,6 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading,
     setUser,
     clearAuth,
-    setTokens
-  }
+setAccessToken  ,
+setRefreshToken}
 });

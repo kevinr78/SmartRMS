@@ -9,7 +9,7 @@ export function useAuth(){
   const {apiCall} = useApi();
   const authStore = useAuthStore();
   const {user, isAuthenticated, isLoading} = storeToRefs(authStore);
-  const {setUser, setTokens} = authStore;
+  const {setUser,setAccessToken,setRefreshToken } = authStore;
   const authUser = computed(() => user);
   const userRole = computed<string>(() => user.value?.role || "resident");
   const hasHouseHold = computed<string | undefined>(() => user.value?.household);
@@ -23,11 +23,12 @@ export function useAuth(){
       )
       
       setUser(response?.data.user);
-      setTokens(response?.data.accessToken, response?.data.refreshToken);
+      setAccessToken(response?.data.accessToken);
+      setRefreshToken(response?.data.refreshToken);
 
       //navigate to dash
 
-      return response?.data
+      return response
     } catch (error) {
       throw error;
     } finally {

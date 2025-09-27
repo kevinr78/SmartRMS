@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/',verifyUser ,HouseholdController.createHousehold);
 
-router.get('/:id',verifyUser, HouseholdController.getHousehold);
+router.get('/',verifyUser, HouseholdController.getHousehold);
 
 // Only household admins can update or delete the household.
 router.patch(

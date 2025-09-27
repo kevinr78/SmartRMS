@@ -14,7 +14,7 @@ export function useApi(){
     } = {}
   ): Promise<T | null> {
     
-    const {loadingRef, successMessage} = options;
+    const {loadingRef} = options;
     if(loadingRef) {
       loadingRef.value = true;
     }

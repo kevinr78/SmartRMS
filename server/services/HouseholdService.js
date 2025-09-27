@@ -43,7 +43,8 @@ export const createHousehold = async (householdData, creatorId) => {
 export const getHouseholdById = async (householdId) => {
   const household = await Household.findById(householdId).populate({
       path: 'members',
-      select: 'name email profileImage' // Select fields to return for members
+      select: 'firstName lastName email profileImage',
+      options: {virtuals:true}
   });
 
   if (!household) {

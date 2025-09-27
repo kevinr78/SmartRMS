@@ -20,7 +20,8 @@ app.use(Vue3Toastify,{
   position:'bottom-right',
   style: {
     opacity:'1',
-    userSelect: 'initial'
+    userSelect: 'initial',
+    'z-index':1000
   } as ToastContainerOptions
 })
 app.mount('#app')

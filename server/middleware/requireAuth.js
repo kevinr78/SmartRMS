@@ -13,7 +13,6 @@ const verifyUser = function(req,res,next){
       throw new AppError("Invalid/Expired token. PLease login aain", 401);
     }
 
-    
     req.user = verifiedToken;
     next();
   } catch (error) {

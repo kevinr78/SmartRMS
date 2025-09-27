@@ -2,6 +2,7 @@ import { createRouter, createWebHistory} from 'vue-router';
 import BaseAuthView from './components/views/auth/BaseAuthView.vue';
 import AppLayout from './components/ui/layout/AppLayout.vue';
 import Dashboard from './components/views/DashBoard/Dashboard.vue';
+import Household from './components/views/Household/Household.vue';
 const routes = [
   {
     path :'/',
@@ -28,7 +29,7 @@ const routes = [
       },
       {
         path:'household',
-        component:'household'
+        component:Household
       },
     ]
   }

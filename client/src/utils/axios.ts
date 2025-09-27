@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { useAuthStore } from '../store/auth/auth';
 
 const api = axios.create();
 
@@ -8,39 +8,45 @@ api.defaults.headers.common= {
   "Content-Type": "application/json",
 };
 
-api.defaults.timeout = 10000;
+api.defaults.timeout = 100000;
 
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken") ?? null;
+  
+const {accessToken} = useAuthStore()
+  const token = accessToken ?? null;
   if(token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config
 }, (error) => Promise.reject(error));
 
-api.interceptors.response.use((response) => response,
+api.interceptors.response.use(
+  (response) => response,
   async (error) => {
+    
+const {refreshToken,setAccessToken} = useAuthStore();
     if(!error.response) console.log(error.response);
 
     const originalRequest = error.config;
-    switch(error.response.status) {
+    switch(error?.response?.status ?? 500) {
       case 401:
         if(!originalRequest._retry) {
           originalRequest._retry = true;
           try {
-            const refreshToken = localStorage.getItem('refreshToken');
-            const { data } = await api.post(`${import.meta.env.BASE_URL}/api/auth/refresh`, {
-              token: refreshToken
+            const refreshTokenFromStore = refreshToken;
+            const { data } = await api.post('auth/refresh-token', {
+              token: refreshTokenFromStore
             });
-            localStorage.setItem("accessToken", data.accessToken);
+           
+            setAccessToken(data.accessToken);
             api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
             originalRequest.headers.Authorization =`Bearer ${data.accessToken}`;
             return api(originalRequest)
           } catch (error) {
-            console.log("Session xpired. PLease Login Again")
+            console.log("Session expired. PLease Login Again")
             localStorage.clear();
-            window.location.href = "/login"
+            window.location.href = "/"
           }
         }
         break;

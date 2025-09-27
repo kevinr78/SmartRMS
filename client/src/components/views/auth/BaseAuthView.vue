@@ -48,8 +48,8 @@ async function handleFormSubmit(e) {
       response = await register(formValue);
     }
 
-    showSuccessToast(response.message);
-    router.push({path:'/home'})
+    showSuccessToast(response.data.message);
+    router.push({path:'/home/dashboard'})
   } catch (error) {
   } finally {
     showLoadingSpinner.value = false;

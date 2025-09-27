@@ -9,7 +9,7 @@
       <Input
         label="Email"
         type="email"
-        placeholder="Enter your email here"
+        placeholder="Eg. janedoe@gmail.com"
         :show-icon="true"
         class="w-full"
         name="email"
@@ -22,7 +22,7 @@
         label="Password"
         type="password"
         class="w-full"
-        placeholder="Enter your password here"
+        placeholder="Eg. janeDoe@221"
         name="password"
       >
         <template #icon>

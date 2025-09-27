@@ -40,7 +40,7 @@ const props = defineProps({
   },
   // We accept a Vue component as a prop for the icon
   icon: {
-    type: Object as PropType<Component>,
+    type: Function ,
   },
   // The 'variant' prop controls the color scheme
   variant: {

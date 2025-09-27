@@ -6,7 +6,7 @@ class JwtService {
   constructor() {
     this.accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "default_access_secret";
     this.refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret";
-    this.accessTokenExpiry = "15m"; // Short-lived
+    this.accessTokenExpiry = "1m"; // Short-lived
     this.refreshTokenExpiry = "7d"; // Longer-lived
   }
 
@@ -25,7 +25,7 @@ class JwtService {
     try {
       return jwt.verify(token, this.accessTokenSecret);
     } catch (err) {
-      throw new AppError("Error while verifying credentials")
+      throw new AppError("Error while verifying credentials", 401)
     }
   }
 

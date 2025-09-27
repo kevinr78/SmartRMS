@@ -61,8 +61,12 @@ const loginUser = async function (userData) {
       accessToken,
       refreshToken,
       user: {
-         email: user.email,
-      id: user._id,
+        email:user.email,
+        _id:user._id,
+        firstName:user.firstName,
+        lastName:user.lastName,
+        household:user.household,
+        role:user.role,
       },
     };
   } catch (error) {
@@ -70,15 +74,15 @@ const loginUser = async function (userData) {
   }
 };
 
-const refreshAccessToken = function(refreshToken){
-  if(!refreshToken){
+const refreshAccessToken = function(request, res){
+  if(!request.body.token){
     throw new AppError("No token present", 401);
   }
+  const decodedToken = JwtService.verifyRefreshToken(request.body.token);
 
-  const decodedToken = JwtService.verifyRefreshToken(refreshToken);
-  const newRefreshToken = JwtService.generateAccessToken({id:decodedToken._id,email:decodedToken.email });
+  const newAccessToken = JwtService.generateAccessToken({id:decodedToken.id,email:decodedToken.email });
 
-  return newRefreshToken;
+  return res.json({accessToken:newAccessToken});
 }
 export {
   loginUser,

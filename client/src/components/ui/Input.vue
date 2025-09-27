@@ -1,21 +1,17 @@
 <template>
-  <div class="input-container  input">
-    <label for="" class="labe" >
+  <div class="input-container ">
+    <label :for="name" class="label text-primary-text text-left ml-2 mb-3 font-semibold w-full">
+      {{ label }}
+    </label>
+    <div class="flex border-1 border-light-border rounded-md items-center bg-white">
       <div class="opacity-50 ml-2">
-        <slot name="icon" >
+        <slot name="icon">
         </slot>
       </div>
-    </label>
-
-      <input
-        v-model="inputModel"
-        :type="type"
-        class="input outline-0 w-full"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :name="name"
-      />
-      <p v-show="hasError" class="label">{{ errorMessage }}</p>
+      <input v-model="inputModel" :type="type" class="input outline-0 w-full border-0 focus:outline-0" :placeholder="placeholder"
+        :disabled="disabled" :name="name" :required="isRequired" />
+    </div>
+    <p v-show="hasError" class="label">{{ errorMessage }}</p>
   </div>
 </template>
 <script setup lang="ts">
@@ -46,22 +42,16 @@ defineProps({
   showIcon: {
     type: Boolean,
     default: false
-  }, 
+  },
   name: {
     type: String,
+    required: true
+  },
+  isRequired: {
+    type: Boolean,
     required: true
   }
 });
 </script>
 
-<style>
-
-input{
-  border:0;
-}
-input:focus,
-.input-container:focus {
-  border: none;
-  outline: none;
-}
-</style>
+<style></style>

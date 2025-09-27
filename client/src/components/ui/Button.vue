@@ -2,14 +2,16 @@
   <button
     @click="handleClick"
     class ="btn"
+    :class="`btn-${variant}`"
     :disabled = "disabled"
+    :name="name"
     role="button"
   >
     <div v-if="$slots.icon">
       <slot  name="icon"/>
     </div>
     <slot name="text">
-      Button
+
     </slot>
     <slot name="spinner">
       <Spinner :showSpinner = "isLoading"/>
@@ -22,6 +24,10 @@ import Spinner from './Spinner.vue';
 
  defineProps({
     variant:{
+      type:String,
+    },
+    name:{
+      required:false,
       type:String,
     },
     disabled:{

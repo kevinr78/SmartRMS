@@ -1,5 +1,5 @@
 <template>
-  <span v-if="showSpinner" className="loading loading-spinner"></span>
+  <span v-if="showSpinner" class="loading loading-spinner"></span>
 </template>
 <script setup>
   defineProps({
