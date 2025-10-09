@@ -1,35 +1,57 @@
 <template>
-  <h1>House Rules</h1>
-  <div class="flex items-center">
-    <Input name="rule" placeholder="Add a new houserule" :is-required="false" class="flex-1" type="text" v-model="rule"/>
-    <Button variant="primary" @button-click="addNewRule">
+  <h2 class="font-medium">House Rules</h2>
+  <div class="flex items-end ">
+    <Input
+      name="rule"
+      placeholder="Add a new house rule..."
+      :is-required="false"
+      class="w-full"
+      type="text"
+      v-model="newRule"
+    />
+    <Button variant="primary" class="ml-2" @button-click="addNewRule">
       <template #icon>
         <Plus />
       </template>
     </Button>
   </div>
-  <section>
+  <section class="mt-4">
     <ol>
-      <li v-for="houseRule in rules">
-        {{ houseRule }}
+      <li v-for="(houseRule,index) in rules" :key="index" class=" flex flex-col bg-base-300 gap-2 mb-2  p-2 rounded-md justify-between w-full">
+          <div class="group flex justify-between">
+            <p class="font-light">
+              {{  houseRule }}
+            </p>
+              <div class=" hidden cursor-pointer group-hover:block" @click="removeRule(index)">
+                <CircleX color="#e74b4b" />
+              </div>
+          </div>
+
       </li>
     </ol>
   </section>
 </template>
 <script setup>
-import Input from '../../../ui/Input.vue';
-import Button from '../../../ui/Button.vue';
-import { Plus } from 'lucide-vue-next';
-import { ref } from 'vue';
+import Input from "../../../ui/Input.vue";
+import Button from "../../../ui/Button.vue";
+import { Plus, CircleX } from "lucide-vue-next";
+import { ref } from "vue";
+import useNotifications from "../../../../composables/useNotifications";
 
-const rule = defineModel('rule');
+const { showWarningToast } = useNotifications()
+const newRule = ref("");
 const rules = ref([]);
 
-
-function addNewRule(){
-  console.log(rule.value)
-  if(rule.length >0){
-    rules.push(rule)
+function addNewRule() { 
+  if (newRule.value.trim()) {
+    rules.value.push(newRule.value.trim());
+    newRule.value = ""; // clear input
+  }else{
+    showWarningToast("Rule Cannot be empty")
   }
+}
+
+function removeRule(index){
+  rules.value.splice(index,1);
 }
 </script>

@@ -6,7 +6,7 @@ class JwtService {
   constructor() {
     this.accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "default_access_secret";
     this.refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret";
-    this.accessTokenExpiry = "1m"; // Short-lived
+    this.accessTokenExpiry = "1h"; // Short-lived
     this.refreshTokenExpiry = "7d"; // Longer-lived
   }
 
