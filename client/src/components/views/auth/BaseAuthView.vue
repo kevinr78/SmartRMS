@@ -20,8 +20,8 @@ import useNotifications from "../../../composables/useNotifications";
 
 const { login, register } = useAuth();
 const { showErrorToast, showSuccessToast } = useNotifications();
-import { useRouter } from "vue-router";
-
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
 const router = useRouter();
 const currentView = ref("login");
 const showLoadingSpinner = ref(false);
@@ -37,10 +37,12 @@ function changeView({ changeViewTo }) {
 async function handleFormSubmit(e) {
   let response;
   showLoadingSpinner.value = true;
+  const token = route.query.token ?? null;
   try {
     const form = new FormData(e.currentTarget);
     const formValue = Object.fromEntries(form);
     const formType = formValue["form-type"];
+    formValue.token = token;
     delete formValue["form-type"];
     if (formType === "login") {
       response = await login(formValue);
@@ -49,7 +51,7 @@ async function handleFormSubmit(e) {
     }
 
     showSuccessToast(response.data.message);
-    router.push({path:'/home/dashboard'})
+    router.push({ path: "/home/dashboard" });
   } catch (error) {
   } finally {
     showLoadingSpinner.value = false;
@@ -67,7 +69,6 @@ async function handleFormSubmit(e) {
   opacity: 0;
   transform: translateX(-30px);
 }
-
 
 .fade-leave-to {
   opacity: 0;

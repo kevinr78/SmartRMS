@@ -1,32 +1,32 @@
 <template>
-  <div class="bg-base-100 rounded-xl shadow p-6 border-2 " :class="[variantClasses.bgClass, variantClasses.borderClass]">
-    <div class="flex items-start justify-between">
+  <div
+    class="bg-base-100 rounded-xl shadow p-6 border-2 flex flex-1"
+    :class="[variantClasses.bgClass, variantClasses.borderClass]"
+  >
+    <div class="flex items-start gap-2 flex-1 w-full">
       <!-- The title of the card -->
       <div class="flex flex-col">
-        <h3 class="text-text-secondary font-medium text-primary-text">{{ title }}</h3>
+        <h3 class="text-text-secondary font-medium text-primary-text">
+          {{ title }}
+        </h3>
         <!-- The main value, formatted to be large and bold -->
-        <p class="text-3xl text-left font-bold   mt-2">{{ value }}</p>
+        <p class="text-3xl text-left font-bold mt-2">{{ value }}</p>
       </div>
-      <div 
+      <div
         v-if="icon"
-        class="p-2 rounded-lg" 
+        class="p-2 rounded-lg"
         :class="[variantClasses.iconBgClass, variantClasses.iconTextColorClass]"
       >
         <!-- The 'is' attribute dynamically renders the component passed in the 'icon' prop -->
         <component :is="icon" :size="24" />
       </div>
-      <div 
-        v-if="$slots.details"
-        class="text-2xl font-bold"
-        >
-        $0.00
-      </div>
+      <div v-if="$slots.details" class="text-2xl font-bold">$0.00</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, type Component } from 'vue';
+import { computed, type PropType, type Component } from "vue";
 
 // Define the props the component accepts
 const props = defineProps({
@@ -40,51 +40,50 @@ const props = defineProps({
   },
   // We accept a Vue component as a prop for the icon
   icon: {
-    type: Function ,
+    type: Function,
   },
   // The 'variant' prop controls the color scheme
   variant: {
-    type: String as PropType<'primary' | 'success' | 'warning' | 'error'>,
-    default: 'primary',
+    type: String as PropType<"primary" | "success" | "warning" | "error">,
+    default: "primary",
   },
 });
 
 // A computed property to determine the correct CSS classes based on the variant
 const variantClasses = computed(() => {
   switch (props.variant) {
-    case 'success':
+    case "success":
       return {
-        bgClass: 'bg-success/10',
-        iconBgClass: 'bg-success',
-        textContentClass:'text-success-content',
-        borderClass:'border-success-content/15',
-        iconTextColorClass: 'text-success-content',
+        bgClass: "bg-success/10",
+        iconBgClass: "bg-success",
+        textContentClass: "text-success-content",
+        borderClass: "border-success-content/15",
+        iconTextColorClass: "text-success-content",
       };
-    case 'warning':
+    case "warning":
       return {
-        bgClass: 'bg-warning/10',
-        iconBgClass: 'bg-warning',
-        textContentClass:'text-warning-content',
-        borderClass:'border-warning-content/15',
-        iconTextColorClass: 'text-warning-content',
+        bgClass: "bg-warning/10",
+        iconBgClass: "bg-warning",
+        textContentClass: "text-warning-content",
+        borderClass: "border-warning-content/15",
+        iconTextColorClass: "text-warning-content",
       };
-    case 'error':
+    case "error":
       return {
-        bgClass: 'bg-error/10',
-        iconBgClass: 'bg-error',
-        textContentClass:'text-error-content',
-        borderClass:'border-error-content/15',
-        iconTextColorClass: 'text-error-content',
+        bgClass: "bg-error/10",
+        iconBgClass: "bg-error",
+        textContentClass: "text-error-content",
+        borderClass: "border-error-content/15",
+        iconTextColorClass: "text-error-content",
       };
     default: // 'primary'
       return {
-        bgClass: 'bg-primary/10',
-        iconBgClass: 'bg-primary',
-        textContentClass:'text-primary-content',
-        borderClass:'border-primary-content/15',
-        iconTextColorClass: 'text-primary-content',
+        bgClass: "bg-primary/10",
+        iconBgClass: "bg-primary",
+        textContentClass: "text-primary-content",
+        borderClass: "border-primary-content/15",
+        iconTextColorClass: "text-primary-content",
       };
   }
 });
 </script>
-

@@ -13,6 +13,7 @@
         :show-icon="true"
         class="w-full"
         name="email"
+        value="kevinrodrigues43@gmail.com"
       >
         <template #icon>
           <Mail :size="18" />
@@ -24,6 +25,7 @@
         class="w-full"
         placeholder="Eg. janeDoe@221"
         name="password"
+        value="kevinr"
       >
         <template #icon>
           <KeyRound :size="18" />
@@ -59,11 +61,10 @@
 <script setup>
 import Input from "../Input.vue";
 import Button from "../Button.vue";
-import { Mail,KeyRound } from "lucide-vue-next";
+import { Mail, KeyRound } from "lucide-vue-next";
 
-
-const emit = defineEmits(["change-view",'submit-form']);
+const emit = defineEmits(["change-view", "submit-form"]);
 defineProps({
-  isLoading:Boolean
-})
+  isLoading: Boolean,
+});
 </script>

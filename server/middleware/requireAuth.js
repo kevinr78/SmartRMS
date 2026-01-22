@@ -1,23 +1,29 @@
 import AppError from "../utils/AppError.js";
-import JwtService from '../utils/jwt.js';
+import jwtService from "../index.js";
+import User from "../models/User.js";
 
-const verifyUser = function(req,res,next){
+const verifyUser = function (req, res, next) {
   const jwt = req.headers["authorization"].split(" ")[1];
   try {
-    if(!jwt){
+    if (!jwt) {
       throw new AppError("Unauthorized access", 401);
     }
-    const verifiedToken = JwtService.verifyAccessToken(jwt);
-    
-    if(!verifiedToken){
+    const verifiedToken = jwtService.verifyAccessToken(jwt);
+    if (!verifiedToken) {
       throw new AppError("Invalid/Expired token. PLease login aain", 401);
     }
-
-    req.user = verifiedToken;
-    next();
+    User.findById(verifiedToken.id)
+      .select("household email _id role")
+      .then((user) => {
+        if (!user) {
+          throw new AppError("User associated with token not found", 401);
+        }
+        req.user = user;
+        next();
+      });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-export default verifyUser
+export default verifyUser;

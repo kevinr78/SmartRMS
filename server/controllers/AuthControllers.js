@@ -2,7 +2,6 @@ import AppError from "../utils/AppError.js";
 import { loginUser, registerUser } from "../services/AuthService.js";
 
 const register = async function (req, res, next) {
-  const { firstName, lastName, email, password } = req.body;
   try {
     const registering = await registerUser(req.body);
     if (!registering) {
@@ -31,8 +30,8 @@ const login = async function (req, res, next) {
     return res.status(201).json({
       message: "User logged in Successfully",
       accessToken: loggingIn.accessToken,
-      refreshToken:loggingIn.refreshToken,
-      user:loggingIn.user
+      refreshToken: loggingIn.refreshToken,
+      user: loggingIn.user,
     });
   } catch (error) {
     next(error);

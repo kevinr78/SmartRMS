@@ -26,14 +26,16 @@
           :link="link.path"
         >
           <template #icon>
-            <component :is="link.icon"  :size="iconSize" :color="iconColor" />
+            <component :is="link.icon" :size="iconSize" :color="iconColor" />
           </template>
         </SidebarLink>
       </ul>
     </section>
+
     <footer>
-      <p>Kevin Rodrigues</p>
-      <p>edlwe2vfdn.com</p>
+      <Button variant="primary" @buttonClick="useAuth().logout()">
+        <template #text> Logout </template>
+      </Button>
     </footer>
   </aside>
 </template>
@@ -42,7 +44,8 @@ import { School } from "lucide-vue-next";
 import SidebarLink from "./SidebarLink.vue";
 import sidebarLinks from "./sidebarLinks";
 import { ref } from "vue";
-
+import { useAuth } from "../../../../composables/useAuth";
+import Button from "../../Button.vue";
 const iconSize = ref<number>(26);
 const iconColor = ref<string>("#7b889c");
 </script>

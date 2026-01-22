@@ -9,28 +9,31 @@ export const useAuthStore = defineStore("auth", () => {
   const refreshToken = ref<string | null>(localStorage.getItem("refreshToken"));
   const isLoading = ref<boolean>(false);
 
-  const isAuthenticated = computed<boolean>(() => !!user.value && !!accessToken.value);
+  const isAuthenticated = computed<boolean>(
+    () => !!user.value && !!accessToken.value
+  );
+
   const setUser = (userData: User) => {
-    user.value = userData
-  }
+    user.value = userData;
+  };
 
   const setAccessToken = (token: string) => {
-    accessToken.value = token
-    localStorage.setItem('accessToken', token)
-  }
+    accessToken.value = token;
+    localStorage.setItem("accessToken", token);
+  };
 
-  const setRefreshToken = (token:string) => {
+  const setRefreshToken = (token: string) => {
     refreshToken.value = token;
-    localStorage.setItem('refreshToken', token)
-  }
+    localStorage.setItem("refreshToken", token);
+  };
 
   const clearAuth = () => {
-    user.value = null
-    accessToken.value = null
-    refreshToken.value = null
+    user.value = null;
+    accessToken.value = null;
+    refreshToken.value = null;
     localStorage.clear();
-  }
-  
+    window.location.href = "/";
+  };
 
   return {
     user,
@@ -40,6 +43,7 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading,
     setUser,
     clearAuth,
-setAccessToken  ,
-setRefreshToken}
+    setAccessToken,
+    setRefreshToken,
+  };
 });

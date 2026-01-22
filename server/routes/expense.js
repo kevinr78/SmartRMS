@@ -1,5 +1,5 @@
 import express from "express";
-import * as HouseholdController from "../controllers/HouseholdController.js";
+import * as ExpenseController from "../controllers/ExpenseController.js";
 import verifyUser from "../middleware/requireAuth.js"; // Assuming this middleware exists
 
 const router = express.Router();
@@ -7,11 +7,10 @@ const router = express.Router();
 // All routes below this point are protected and require a logged-in user.
 // router.use();
 
-router.post("/", verifyUser, HouseholdController.createHousehold);
+router.post("/", verifyUser, ExpenseController.createExpense);
 
-router.get("/", verifyUser, HouseholdController.getHousehold);
-router.get("/invite-link", verifyUser, HouseholdController.getInviteLink);
-router.post("/accept-invite", HouseholdController.acceptHouseholdInvite);
+/* router.get("/", verifyUser, HouseholdController.getHousehold);
+
 // Only household admins can update or delete the household.
 router.patch(
   "/",
@@ -25,6 +24,6 @@ router.delete(
   verifyUser,
   HouseholdController.protectAdminRoutes,
   HouseholdController.deleteHousehold
-);
+); */
 
 export default router;
