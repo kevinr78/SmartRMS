@@ -7,31 +7,31 @@
   <div class="expense-cards">
     <Card
       title="Total I Owe"
-      value="1"
+      :value="myExpenseShare"
       variant="primary"
       :icon="CheckCheckIcon"
     />
     <Card
       title="Total owed to me"
-      value="1"
+      :value="totalOwedToMe"
       variant="warning"
       :icon="CheckCheckIcon"
     />
     <Card
-      title="Net Balance"
-      value="1"
+      title="Your Net Balance"
+      :value="yourNetBalance"
       variant="warning"
       :icon="CheckCheckIcon"
     />
     <Card
       title="Total Household Spending"
-      value="1"
+      :value="totalHouseholdSpending.toFixed(2)"
       variant="warning"
       :icon="CheckCheckIcon"
     />
   </div>
   <div class="mt-5">
-    <ExpenseTable />
+    <ExpenseTable :expenses="expenses ?? []" :isLoading="isLoading" />
   </div>
   <Modal
     :currentComponent="modalComponent"
@@ -43,13 +43,70 @@
 import ExpenseHeader from "../../expenses/Header.vue";
 import Header from "../../ui/Header.vue";
 import Card from "../../ui/Card.vue";
-import { CheckCheckIcon } from "lucide-vue-next";
 import ExpenseTable from "../../expenses/ExpenseTable.vue";
 import ExpenseForm from "../../expenses/ExpenseForm.vue";
 import Modal from "../../ui/Modal.vue";
-import { shallowRef, ref } from "vue";
+
+import { useApi } from "../../../composables/useApi";
+import useNotifications from "../../../composables/useNotifications";
+import { useAuth } from "../../../composables/useAuth";
+import api from "../../../utils/axios";
+
+import { shallowRef, ref, onMounted, computed } from "vue";
+import { CheckCheckIcon } from "lucide-vue-next";
+
+const { apiCall } = useApi();
+const { showSuccessToast, showErrorToast } = useNotifications();
+const { authUser } = useAuth();
 const modalComponent = shallowRef(null);
 const componentPropertiesRef = ref({});
+const expenses = ref([]);
+const isLoading = ref(false);
+
+const totalHouseholdSpending = computed(() => {
+  return expenses.value.reduce((total, expense) => total + expense.amount, 0);
+});
+
+const myExpenseShare = computed(() => {
+  return expenses.value.reduce((total, expense) => {
+    const userShare = expense.splitDetails.amounts.find(
+      (detail) => detail.user === authUser.value._id
+    );
+    return total + (userShare ? userShare.amount : 0);
+  }, 0);
+});
+
+const totalOwedToMe = computed(() => {
+  // Placeholder logic; replace with actual calculation
+  const expensesPaidByUser = expenses.value.filter(
+    (expense) => expense.paidBy._id === authUser.value._id
+  );
+  const totalExpense = expensesPaidByUser.reduce(
+    (total, expense) => total + expense.amount,
+    0
+  );
+
+  return totalExpense - myExpenseShare.value;
+});
+
+const yourNetBalance = computed(() => {
+  return totalOwedToMe.value - myExpenseShare.value;
+});
+
+const fetchData = async () => {
+  try {
+    const response = await apiCall(() => api.get(`/expense`), {
+      successMessage: "Expenses fetched successfully",
+      loadingRef: isLoading,
+    });
+
+    showSuccessToast("Expenses loaded");
+    expenses.value = response?.data.data.expenses;
+  } catch (error) {
+    showErrorToast(error.messsage ?? "Failed to load expenses");
+    console.error("Error fetching expenses:", error);
+  }
+};
 
 function changeModalComponent(name) {
   let componentProperties = {};
@@ -71,10 +128,14 @@ function openModal() {
   document.getElementById("my_modal_1").showModal();
 }
 
-function refreshExpenseTable(data) {
+function refreshExpenseTable() {
   console.log("Refreshing Expense Table");
-  console.log("Expense Table should refresh now", data);
+  fetchData();
 }
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 <style>
 .expense-cards {

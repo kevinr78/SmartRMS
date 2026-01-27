@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/auth/auth";
 import api from "../utils/axios";
 import type { LoginCredentials, RegisterData } from "../types/auth";
 import { useApi } from "./useApi";
+
 export function useAuth() {
   const { apiCall } = useApi();
   const authStore = useAuthStore();
@@ -22,7 +23,7 @@ export function useAuth() {
         () => api.post("/auth/login", credentials),
         { successMessage: "Welcome Back!" }
       );
-
+      console.log(response?.data);
       setUser(response?.data.user);
       api
         .get("/household")

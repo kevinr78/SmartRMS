@@ -8,6 +8,17 @@ api.defaults.headers.common = {
   "Content-Type": "application/json",
 };
 
+let isRefreshing = false;
+let failedQueue: Array<any> = [];
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
 api.defaults.timeout = 100000;
 api.interceptors.request.use(
   (config) => {
@@ -24,41 +35,54 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { refreshToken, setAccessToken } = useAuthStore();
-    if (!error.response) console.log(error.response);
-
     const originalRequest = error.config;
-    switch (error?.response?.status ?? 500) {
-      case 401:
-        if (!originalRequest._retry) {
-          originalRequest._retry = true;
-          try {
-            const refreshTokenFromStore = refreshToken;
-            const { data } = await api.post("auth/refresh-token", {
-              token: refreshTokenFromStore,
-            });
 
-            setAccessToken(data.accessToken);
-            api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
-            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-            return api(originalRequest);
-          } catch (error) {
-            console.log("Session expired. PLease Login Again");
-            localStorage.clear();
-            window.location.href = "/";
-          }
-        }
-        break;
-      case 403:
-        console.log("Forbidden");
-        break;
-      case 500:
-        console.log("Server Error");
-        break;
-      default:
-        console.error("API Error:", error.response?.data || error.message);
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(api(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const { refreshToken, setAccessToken } = useAuthStore();
+        const refreshApi = axios.create({
+          baseURL: import.meta.env.VITE_API_BASE_URL,
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const { data } = await refreshApi.post("/auth/refresh-token", {
+          token: refreshToken,
+        });
+
+        setAccessToken(data.accessToken);
+        localStorage.setItem("accessToken", data.accessToken);
+
+        api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
+        processQueue(null, data.accessToken);
+
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        localStorage.clear();
+        window.location.href = "/";
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   }
 );
+
 export default api;

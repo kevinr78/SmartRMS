@@ -130,7 +130,7 @@
           class="input w-15"
           type="number"
           placeholder="0"
-          v-model.number="splitDetails[value.id]"
+          v-model.number="splitDetails[value.userId._id]"
         />
         <span
           v-if="radioInput === 'percentage'"
@@ -160,7 +160,6 @@ import { getFormData } from "../../utils/fetch";
 const { apiCall } = useApi();
 const { showSuccessToast, showErrorToast } = useNotifications();
 const { authUser } = useAuth();
-console.log("Auth User in Expense Form:", authUser.value);
 const showLoadingSpinner = ref(false);
 const splitDetails = ref({});
 const title = ref("");
@@ -196,14 +195,13 @@ async function handleFormSubmit(e) {
       splitMethod: splitMethod.value === "equal" ? "equal" : radioInput.value,
     };
     formData.splitDetails = consolidatedSplitDetails.value;
-    console.log("Form Data to be submitted:", formData);
     const response = await apiCall(() => api.post("/expense", formData), {
       successMessage: "Expense created successfully",
       loadingRef: showLoadingSpinner,
     });
 
     showSuccessToast(response?.data.message);
-    emit("updateEvent", response?.data);
+    emit("updateEvent");
   } catch (error) {
     showErrorToast(error.message);
   } finally {

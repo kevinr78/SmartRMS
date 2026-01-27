@@ -7,7 +7,7 @@ class JwtService {
       process.env.ACCESS_TOKEN_SECRET || "default_access_secret";
     this.refreshTokenSecret =
       process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret";
-    this.accessTokenExpiry = "1h"; // Short-lived
+    this.accessTokenExpiry = "15m"; // Short-lived
     this.refreshTokenExpiry = "7d"; // Longer-lived
   }
 
@@ -39,7 +39,10 @@ class JwtService {
     try {
       return jwt.verify(token, this.refreshTokenSecret);
     } catch (err) {
-      throw new AppError("Error while verifying credentials");
+      if (err.name === "TokenExpiredError") {
+        throw new AppError("Refresh token has expired", 401);
+      }
+      throw new AppError("Invalid refresh token", 401);
     }
   }
 }

@@ -25,6 +25,7 @@ const expenseSchema = new mongoose.Schema(
         "Rent",
         "Cleaning",
         "Maintenance",
+        "Supplies",
         "Entertainment",
         "Transportation",
         "Other",
@@ -52,26 +53,12 @@ const expenseSchema = new mongoose.Schema(
       size: Number,
       uploadedAt: Date,
     },
-    splitType: {
+    splitMethod: {
       type: String,
-      enum: ["equal", "percentage", "custom", "exact"],
+      enum: ["equal", "percentages", "custom", "exact"],
       default: "equal",
     },
     splitDetails: {
-      // For percentage splits
-      percentages: [
-        {
-          user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-          },
-          amount: {
-            type: Number,
-            min: 0,
-            max: 100,
-          },
-        },
-      ],
       // For custom/exact splits
       amounts: [
         {

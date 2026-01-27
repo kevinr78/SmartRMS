@@ -12,7 +12,7 @@ export const createExpense = async (expenseData, user) => {
     const {
       title,
       amount,
-      expenseDate,
+      date: expenseDate,
       category,
       splitMethod,
       splitDetails: expenseSplit,
@@ -39,7 +39,7 @@ export const createExpense = async (expenseData, user) => {
             400
           );
         }
-      } else if (splitDetails === "percentages") {
+      } else if (splitMethod === "percentages") {
         const totalPercentage = expenseSplit.reduce(
           (sum, detail) => sum + detail.amount,
           0
@@ -50,17 +50,19 @@ export const createExpense = async (expenseData, user) => {
             400
           );
         }
+        expenseSplit.forEach((detail) => {
+          detail.amount = (detail.amount / 100) * amount;
+        });
       }
 
-      const type = splitMethod === "exact" ? "amounts" : "percentages";
-      splitDetails[type] = expenseSplit;
+      splitDetails.amounts = expenseSplit;
     } else if (splitMethod === "equal") {
       const household = await Household.findById(user.household).populate(
         "members"
       );
       const memberCount = household.members.length;
       splitDetails.amounts = household.members.map((member) => ({
-        userId: member._id,
+        user: member.userId,
         amount: amount / memberCount,
       }));
     }
@@ -92,5 +94,23 @@ export const createExpense = async (expenseData, user) => {
     throw error;
   } finally {
     session.endSession();
+  }
+};
+
+export const getExpenses = async (user) => {
+  try {
+    const expenses = await Expense.find({ household: user.household })
+      .sort({
+        date: -1,
+      })
+      .populate("paidBy", "firstName lastName email")
+      .populate("household", "name");
+    if (!expenses) {
+      throw new AppError("No expenses found for this household", 404);
+    }
+
+    return expenses;
+  } catch (error) {
+    throw new AppError("Error fetching expenses", 500);
   }
 };

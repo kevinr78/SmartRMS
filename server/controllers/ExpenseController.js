@@ -18,3 +18,13 @@ export const createExpense = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const getExpenses = catchAsync(async (req, res, next) => {
+  const expenses = await ExpenseService.getExpenses(req.user);
+  res.status(200).json({
+    ok: true,
+    data: {
+      expenses,
+    },
+  });
+});
