@@ -23,14 +23,7 @@ const houseHoldSchema = new mongoose.Schema(
       },
     ],
     address: {
-      street: String,
-      city: String,
-      state: String,
-      zipCode: String,
-      country: {
-        type: String,
-        default: "US",
-      },
+      type: String,
     },
     totalResidents: {
       type: Number,

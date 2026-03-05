@@ -57,17 +57,51 @@ export const getHouseholdById = async (householdId) => {
 };
 
 export const updateHousehold = async (householdId, updateData) => {
-  const household = await Household.findByIdAndUpdate(householdId, updateData, {
-    new: true, // Return the modified document rather than the original
-    runValidators: true, // Ensure the update runs against the schema's validators
-  });
+  const { newRule, updateRule, deleteRuleId, ...otherUpdates } = updateData;
+
+  const updateOperations = {};
+
+  if (Object.keys(otherUpdates).length > 0) {
+    updateOperations.$set = otherUpdates;
+  }
+
+  if (newRule) {
+    updateOperations.$push = {
+      houseRules: newRule,
+    };
+  }
+
+  if (updateRule && updateRule.ruleId) {
+    updateOperations.$set = {
+      ...updateOperations.$set,
+      "houseRules.$[elem].rule": updateRule.rule,
+    };
+
+    updateOperations.arrayFilters = [{ "elem._id": updateRule.ruleId }];
+  }
+
+  if (deleteRuleId) {
+    updateOperations.$pull = {
+      houseRules: { _id: deleteRuleId },
+    };
+  }
+
+  const household = await Household.findByIdAndUpdate(
+    householdId,
+    updateOperations,
+    {
+      new: true,
+      runValidators: true,
+      arrayFilters: updateOperations.arrayFilters,
+    }
+  );
 
   if (!household) {
     throw new AppError("No household found with that ID", 404);
   }
+
   return household;
 };
-
 export const deleteHousehold = async (householdId) => {
   const session = await mongoose.startSession();
   session.startTransaction();

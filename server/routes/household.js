@@ -13,12 +13,7 @@ router.get("/", verifyUser, HouseholdController.getHousehold);
 router.get("/invite-link", verifyUser, HouseholdController.getInviteLink);
 router.post("/accept-invite", HouseholdController.acceptHouseholdInvite);
 // Only household admins can update or delete the household.
-router.patch(
-  "/",
-  verifyUser,
-  HouseholdController.protectAdminRoutes,
-  HouseholdController.updateHousehold
-);
+router.patch("/:id", verifyUser, HouseholdController.updateHousehold);
 
 router.delete(
   "/:id",

@@ -2,12 +2,12 @@
   <form @submit="" class="flex gap-3 flex-col">
     <Input
       name="name"
-      :is-required="true"
       label="Household Name"
+      :is-required="true"
       placeholder="Eg. Chase House"
       class="w-full"
       type="text"
-      v-model = "formData.name"
+      v-model="formData.name"
     />
     <div>
       <label
@@ -17,32 +17,36 @@
       </label>
       <textarea
         name="Description"
-        :v-model = "formData.description"
-        placeholder="Brief description of your household..."
         class="input w-full outline-0 border-1 focus:outline-0 border-light-border rounded-md"
         type="textarea"
-      />
+        v-model="formData.description"
+      ></textarea>
     </div>
     <Input
       name="residents"
-      :is-required="true"
       label="Total Residents"
+      :is-required="true"
       placeholder="Eg. 1"
       class="w-full"
+      disabled="false"
       type="number"
-      min="1"
       v-model="formData.totalResidents"
     />
     <Input
-      name="Address"
+      name="address"
       :is-required="true"
-      label="House Address"
+      label="Address"
       placeholder="Eg. 123 Main St"
       class="w-full"
       type="text"
-      v-model="formData.address.country"
+      v-model="formData.address"
     />
-    <Button type="submit" variant="primary" class="w-full mt-2">
+    <Button
+      type="submit"
+      variant="primary"
+      class="w-full mt-2"
+      @click.prevent="handleSubmit"
+    >
       <template #text> Save Changes </template>
     </Button>
   </form>
@@ -50,34 +54,61 @@
 <script setup>
 import Input from "../../../ui/Input.vue";
 import Button from "../../../ui/Button.vue";
-import { computed, watch, ref } from "vue";
+import { computed, watch, ref, onMounted } from "vue";
 
+const emit = defineEmits(["updateSettings"]);
 const props = defineProps({
   householdData: {
     type: Object,
-    required: false
-  }
+    required: false,
+  },
 });
+
 const formData = ref({
-  name: '',
-  description: '',
-  totalResidents: 1,
+  name: "",
+  description: "",
+  totalResidents: 0,
   address: {
-    street: '',
-    city: '',
-    country: '',
-  }
+    street: "",
+    city: "",
+    country: "",
+  },
 });
 
-watch(() => props.householdData, (newData) => {
-  if(newData){
-    console.log(newData)
-    formData.value.name = newData.name || ''
-    formData.value.description = newData.description || ''
-    formData.value.totalResidents = newData.members?.length || 1;
-    formData.value.address.country = newData.address.country;
+function handleSubmit() {
+  const trackedChanges = {};
+  if (props.householdData.name !== formData.value.name) {
+    trackedChanges.name = formData.value.name;
   }
-}, {immediate:true,deep:true})
 
+  if (props.householdData.description !== formData.value.description) {
+    trackedChanges.description = formData.value.description;
+  }
+  if (props.householdData.totalResidents !== formData.value.totalResidents) {
+    trackedChanges.totalResidents = formData.value.totalResidents;
+  }
+  if (props.householdData.address !== formData.value.address) {
+    trackedChanges.address = formData.value.address;
+  }
 
+  emit("updateSettings", formData.value);
+}
+
+watch(
+  () => props.householdData,
+  (data) => {
+    if (!data) return;
+
+    Object.assign(formData.value, {
+      name: data.name,
+      description: data.description,
+      totalResidents: data.totalResidents,
+    });
+
+    if (data.address) {
+      Object.assign(formData.value.address, data.address);
+    }
+  },
+  { immediate: true }
+);
 </script>

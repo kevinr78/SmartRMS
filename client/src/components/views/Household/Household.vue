@@ -38,7 +38,7 @@ const { apiCall } = useApi();
 const { authUser } = useAuth();
 const household = ref();
 const loading = ref(false);
-const modalComponent = shallowRef(null);
+const modalComponent = ref(null);
 const componentPropertiesRef = ref({});
 
 onMounted(() => {
@@ -57,7 +57,8 @@ async function fetchData() {
 }
 
 function changeModalComponent(name) {
-  let componentProperties = {};
+  const componentProperties = {};
+  modalComponent.value = null;
   switch (name) {
     case "InviteMembers":
       componentProperties.title = "Invite Members";
