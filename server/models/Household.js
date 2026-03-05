@@ -59,6 +59,7 @@ const houseHoldSchema = new mongoose.Schema(
       sparse: true,
     },
     invitationCodeExpires: Date,
+
     settings: {
       choreRotationDay: {
         type: String,
@@ -84,6 +85,20 @@ const houseHoldSchema = new mongoose.Schema(
       currency: {
         type: String,
         default: "USD",
+      },
+      // --- NEW PREFERENCES ---
+      quietHoursStart: {
+        type: String,
+        default: "22:00", // 10 PM
+      },
+      quietHoursEnd: {
+        type: String,
+        default: "07:00", // 7 AM
+      },
+      defaultExpenseSplit: {
+        type: String,
+        enum: ["equal", "exact", "percentage"],
+        default: "equal",
       },
     },
     isActive: {

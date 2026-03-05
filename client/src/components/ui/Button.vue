@@ -1,48 +1,74 @@
 <template>
   <button
-    @click="handleClick"
-    class ="btn"
-    :class="`btn-${variant}`"
-    :disabled = "disabled"
+    :type="type"
     :name="name"
-    role="button"
+    :disabled="disabled || isLoading"
+    @click="handleClick"
+    class="btn text-white transition-colors duration-200 flex items-center justify-center gap-2"
+    :class="[variantClass, { 'opacity-70 cursor-not-allowed': disabled }]"
   >
-    <div v-if="$slots.icon">
-      <slot  name="icon"/>
-    </div>
-    <slot name="text">
+    <span v-if="isLoading" class="loading loading-spinner loading-sm"></span>
 
-    </slot>
-    <slot name="spinner">
-      <Spinner :showSpinner = "isLoading"/>
+    <div v-if="$slots.icon && !isLoading" class="flex items-center">
+      <slot name="icon" />
+    </div>
+
+    <slot>
+      <span v-if="text">{{ text }}</span>
     </slot>
   </button>
 </template>
 
-<script setup>
-import Spinner from './Spinner.vue';
+<script setup lang="ts">
+import { computed } from "vue";
 
- defineProps({
-    variant:{
-      type:String,
-    },
-    name:{
-      required:false,
-      type:String,
-    },
-    disabled:{
-      type: Boolean,
-      default:false
-    },
-    isLoading:{
-      required:false,
-      type:Boolean,
-    },
-  });
+const props = defineProps({
+  variant: {
+    type: String,
+    default: "primary", // e.g., primary, secondary, accent, ghost, outline
+  },
+  type: {
+    type: String as () => "button" | "submit" | "reset",
+    default: "button",
+  },
+  name: {
+    type: String,
+    default: "",
+  },
+  text: {
+    type: String,
+    default: "",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-  const emit = defineEmits(['button-click']);
+const emit = defineEmits(["button-click"]);
 
-  function handleClick(e){
-    emit('button-click', e)
+// Dynamically generate the DaisyUI class based on the variant prop
+const variantClass = computed(() => {
+  const baseClasses = {
+    primary: "btn-primary bg-primary hover:bg-primary-focus border-none",
+    secondary: "btn-secondary",
+    outline:
+      "btn-outline border-border-focus text-text-main hover:bg-base-light",
+    ghost: "btn-ghost text-text-main",
+    danger: "btn-error text-white",
+  };
+  return (
+    baseClasses[props.variant as keyof typeof baseClasses] || "btn-primary"
+  );
+});
+
+function handleClick(e: Event) {
+  if (!props.disabled && !props.isLoading) {
+    emit("button-click", e);
   }
+}
 </script>

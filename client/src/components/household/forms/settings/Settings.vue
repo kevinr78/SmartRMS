@@ -72,6 +72,7 @@ async function handleUpdate(updatedData) {
     );
 
     showSuccessToast("Household settings saved successfully!");
+    householdData.value = response.data.data.household;
     document.getElementById("my_modal_1").close();
   } catch (error) {
     showErrorToast(error.message || "Failed to save settings.");

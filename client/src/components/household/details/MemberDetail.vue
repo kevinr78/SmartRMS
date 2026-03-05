@@ -7,7 +7,7 @@
     <div>
       <div
         v-for="member in household.members"
-        class="bg-blue-light-bg rounded-lg p-2 flex justify-between mb-2"
+        class="bg-base-light rounded-lg p-2 flex justify-between mb-2"
       >
         <div class="flex">
           <div class="bg-light-grey-bg rounded-3xl w-10 p-2 mr-2">

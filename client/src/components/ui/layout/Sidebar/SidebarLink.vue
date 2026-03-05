@@ -1,33 +1,42 @@
 <template>
-  <div class="cursor-pointer">
-    <router-link :to="`/${link}`">
-        <li
-        class="group flex items-center hover:bg-blue-light-bg rounded-lg p-2 w-full xl:w-[250px]"
+  <li>
+    <router-link
+      :to="`/${link}`"
+      class="group flex items-center rounded-xl p-3 w-full transition-all duration-200 hover:bg-primary-light hover:shadow-sm"
+      active-class="bg-primary-light shadow-sm router-link-active"
+    >
+      <div
+        class="bg-base-light p-2.5 rounded-lg lg:mr-4 group-hover:bg-white transition-colors shadow-sm group-[.router-link-active]:bg-white"
+      >
+        <slot name="icon">
+          <Ban
+            :size="22"
+            class="text-text-secondary group-hover:text-primary transition-colors group-[.router-link-active]:text-primary"
+          />
+        </slot>
+      </div>
+
+      <div class="flex-col items-start hidden lg:flex">
+        <p
+          class="text-text-main font-medium group-hover:text-primary transition-colors group-[.router-link-active]:text-primary text-left"
         >
-        <div
-          class="bg-light-grey-bg p-2 rounded-lg mr-3 group-hover:bg-light-blue "
+          {{ title }}
+        </p>
+        <p
+          class="font-light text-xs text-text-secondary group-hover:text-primary/70 transition-colors hidden xl:block mt-0.5 text-left group-[.router-link-active]:text-primary/70"
         >
-          <slot name="icon">
-            <Ban :size="26" color="#7b889c" />
-          </slot>
-        </div>
-        <div class="flex-col items-start hidden md:flex cursor-pointer">
-          <p class="text-primary-text group-hover:text-blue-bg cursor-pointer">
-            {{ props.title }}
-          </p>
-          <p class="font-light text-secondary-text hidden xl:block cursor-pointer">
-            {{ props.subTitle }}
-          </p>
-        </div>
-      </li>
-      </router-link>
-  </div>
+          {{ subTitle }}
+        </p>
+      </div>
+    </router-link>
+  </li>
 </template>
 
 <script setup lang="ts">
 import { Ban } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
-const props = defineProps({
+
+defineProps({
   title: {
     type: String,
     required: true,
@@ -36,10 +45,9 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  link:{
+  link: {
     type: String,
-    required:true
-
-  }
+    required: true,
+  },
 });
 </script>

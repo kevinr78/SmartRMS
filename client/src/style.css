@@ -2,12 +2,28 @@
 @plugin "daisyui";
 
 @theme {
-  --color-blue-bg:#3275f1;
-  --color-blue-light-bg:#ebf3fc;
-  --color-secondary-text:#7b889c;
-  --color-tertiary-text:#95a0af;
-  --color-primary-text:#58585e;
-  --color-light-grey-bg:#f1f5f9;
-  --color-light-border:#eef2f7;
-  --color-eggshell: #f9fbfd;
+  /* Brand Colors */
+  --color-primary: #3275f1;
+  --color-primary-light: #ebf3fc;
+  --color-primary-focus: #2563eb;
+
+  /* Backgrounds */
+  --color-base-main: #ffffff;
+  --color-base-eggshell: #f9fbfd;
+  --color-base-light: #f1f5f9;
+
+  /* Text Colors */
+  --color-text-main: #334155; /* Darker for better readability */
+  --color-text-primary: #58585e; /* Your original primary */
+  --color-text-secondary: #7b889c;
+  --color-text-tertiary: #95a0af;
+
+  /* Borders */
+  --color-border-light: #eef2f7;
+  --color-border-focus: #cbd5e1;
+
+  /* Semantic UI Colors */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
 }
