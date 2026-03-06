@@ -3,9 +3,9 @@
     <dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle">
       <div class="modal-box">
         <div class="flex justify-center">
-          <h3 class="text-lg font-bold mb-4">
+          <!--    <h3 class="text-lg font-bold mb-4">
             {{ componentProperties.title }}
-          </h3>
+          </h3> -->
           <form method="dialog">
             <button
               class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

@@ -48,15 +48,15 @@
 </template>
 
 <script setup>
-import ExpenseHeader from "../../expenses/Header.vue";
-import Card from "../../ui/Card.vue";
-import ExpenseTable from "../../expenses/ExpenseTable.vue";
-import ExpenseForm from "../../expenses/ExpenseForm.vue";
-import Modal from "../../ui/Modal.vue";
-import { useApi } from "../../../composables/useApi";
-import { useAuth } from "../../../composables/useAuth";
-import api from "../../../utils/axios";
-import useNotifications from "../../../composables/useNotifications";
+import ExpenseHeader from "../expenses/Header.vue";
+import Card from "../ui/Card.vue";
+import ExpenseTable from "../expenses/ExpenseTable.vue";
+import ExpenseForm from "../expenses/ExpenseForm.vue";
+import Modal from "../ui/Modal.vue";
+import { useApi } from "../../composables/useApi";
+import { useAuth } from "../../composables/useAuth";
+import api from "../../utils/axios";
+import useNotifications from "../../composables/useNotifications";
 import { shallowRef, ref, onMounted, computed } from "vue";
 
 const { apiCall } = useApi();

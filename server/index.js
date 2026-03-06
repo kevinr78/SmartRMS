@@ -15,6 +15,8 @@ export default jwtService;
 import authRouter from "./routes/auth.js";
 import householdRouter from "./routes/household.js";
 import expenseRouter from "./routes/expense.js";
+import choresRouter from "./routes/chores.js";
+import billsRouter from "./routes/bills.js";
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/household", householdRouter);
 app.use("/api/expense", expenseRouter);
+app.use("/api/chores", choresRouter);
+app.use("/api/bills", billsRouter);
 
 // Handle undefined routes
 /* app.all("*", (req, res, next) => {

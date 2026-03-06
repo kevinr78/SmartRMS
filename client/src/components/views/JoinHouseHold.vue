@@ -25,12 +25,12 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import api from "../../../utils/axios";
-import { useApi } from "../../../composables/useApi";
+import api from "../../utils/axios";
+import { useApi } from "../../composables/useApi";
 import { ref } from "vue";
-import Spinner from "../../ui/Spinner.vue";
+import Spinner from "../ui/Spinner.vue";
 
-import useNotifications from "../../../composables/useNotifications";
+import useNotifications from "../../composables/useNotifications";
 
 const route = useRoute();
 const { apiCall } = useApi();

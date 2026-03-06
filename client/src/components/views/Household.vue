@@ -21,18 +21,18 @@
 </template>
 
 <script setup>
-import Header from "../../ui/Header.vue";
-import HouseholdHeader from "../../household/Header.vue";
-import NewHousehold from "../../household/NewHousehold.vue";
-import InviteMembers from "../../household/forms/InviteMembers.vue";
-import Settings from "../../household/forms/settings/Settings.vue";
-import { useApi } from "../../../composables/useApi";
-import useNotifications from "../../../composables/useNotifications";
-import api from "../../../utils/axios";
+import Header from "../ui/Header.vue";
+import HouseholdHeader from "../household/Header.vue";
+import NewHousehold from "../household/NewHousehold.vue";
+import InviteMembers from "../household/forms/InviteMembers.vue";
+import Settings from "../household/forms/settings/Settings.vue";
+import { useApi } from "../../composables/useApi";
+import useNotifications from "../../composables/useNotifications";
+import api from "../../utils/axios";
 import { onMounted, ref, shallowRef } from "vue";
-import { useAuth } from "../../../composables/useAuth";
-import Spinner from "../../ui/Spinner.vue";
-import Banner from "../../household/Banner.vue";
+import { useAuth } from "../../composables/useAuth";
+import Spinner from "../ui/Spinner.vue";
+import Banner from "../household/Banner.vue";
 
 const { apiCall } = useApi();
 const { authUser } = useAuth();
