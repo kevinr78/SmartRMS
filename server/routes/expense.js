@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.post("/", verifyUser, ExpenseController.createExpense);
 router.get("/", verifyUser, ExpenseController.getExpenses);
+router.patch("/:id", verifyUser, ExpenseController.editExpense);
+router.delete("/:id", verifyUser, ExpenseController.deleteExpense);
 /* 
 
 // Only household admins can update or delete the household.

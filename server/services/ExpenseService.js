@@ -114,3 +114,23 @@ export const getExpenses = async (user) => {
     throw new AppError("Error fetching expenses", 500);
   }
 };
+
+export const updateExpense = async (expenseId, updateData) => {
+  const expense = await Expense.findByIdAndUpdate(expenseId, updateData, {
+    new: true,
+    runValidators: true,
+  }).populate("paidBy", "firstName lastName fullName");
+
+  if (!expense) {
+    throw new AppError("No expense found with that ID", 404);
+  }
+  return expense;
+};
+
+export const deleteExpense = async (expenseId) => {
+  const expense = await Expense.findByIdAndDelete(expenseId);
+  if (!expense) {
+    throw new AppError("No expense found with that ID", 404);
+  }
+  return expense;
+};

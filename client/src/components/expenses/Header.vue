@@ -10,7 +10,7 @@
       variant="primary"
       @buttonClick="$emit('button-click', 'NewHousehold')"
     >
-      <template #text> Add Expense </template>
+      Add Expense
       <template #icon>
         <Plus />
       </template>

@@ -49,7 +49,7 @@
 
     <footer class="p-4 border-t border-border-light mt-auto">
       <Button
-        variant="outline"
+        variant="primary"
         class="w-full flex justify-center lg:justify-start gap-2 border-border-light hover:bg-error/10 hover:text-error hover:border-error/20 text-text-secondary transition-all"
         @button-click="useAuth().logout()"
       >
