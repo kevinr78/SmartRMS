@@ -23,19 +23,7 @@ export function useAuth() {
         () => api.post("/auth/login", credentials),
         { successMessage: "Welcome Back!" }
       );
-      console.log(response?.data);
-      setUser(response?.data.user);
-      api
-        .get("/household")
-        .then((hhResponse) => {
-          if (hhResponse?.data) {
-            user.value!.household = hhResponse.data.data.household;
-          }
-        })
-        .catch(() => {
-          console.log("No household found for user.");
-        });
-
+      setUser(response.data.user);
       setAccessToken(response?.data.accessToken);
       setRefreshToken(response?.data.refreshToken);
       //navigate to dash

@@ -1,38 +1,30 @@
-import type { Ref } from "vue";
-import useNotifications from "./useNotifications";
-export function useApi() {
-  //const showError
-  const { showErrorToast, showSuccessToast } = useNotifications();
+import { ref } from "vue";
 
-  async function apiCall<T>(
-    apiFunction: () => Promise<T>,
-    options: {
-      showErrorToast?: boolean;
-      loadingRef?: Ref<boolean>;
-      successMessage?: string;
-    } = {}
-  ): Promise<T | null> {
-    const { loadingRef } = options;
-    if (loadingRef) {
-      loadingRef.value = true;
-    }
+export function useApi() {
+  const error = ref(null);
+
+  /**
+   * @param {Function} fn - The axios call: () => api.get(...)
+   * @param {Object} options - { loadingRef, successMessage }
+   */
+  const apiCall = async (fn: Function, options: any = {}) => {
+    const { loadingRef = null } = options;
+
+    if (loadingRef) loadingRef.value = true;
+    error.value = null;
 
     try {
-      const result = await apiFunction();
-      showSuccessToast(options.successMessage ?? "Success");
-      return result;
-    } catch (error: any) {
-      const message = error.response?.data.message || "Something Went wrong";
-      showErrorToast(message);
-      throw error;
+      const response = await fn();
+      return response;
+    } catch (err: any) {
+      // Extract the most relevant error message
+      error.value =
+        err.response?.data?.message || err.message || "Something went wrong";
+      throw err; // Re-throw so the component can still handle specific logic if needed
     } finally {
-      if (loadingRef) {
-        loadingRef.value = false;
-      }
+      if (loadingRef) loadingRef.value = false;
     }
-  }
-
-  return {
-    apiCall,
   };
+
+  return { error, apiCall };
 }

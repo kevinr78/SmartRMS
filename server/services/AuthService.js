@@ -3,6 +3,7 @@ import AppError from "../utils/AppError.js";
 import jwtService from "../index.js";
 import Invitation from "../models/Invitation.js";
 import Household from "../models/Household.js";
+import { getHouseholdById } from "./HouseholdService.js";
 const registerUser = async function (userData) {
   const { firstName, lastName, email, password, token } = userData;
 
@@ -81,7 +82,18 @@ const loginUser = async function (userData) {
       email: user.email,
       id: user._id,
     });
-
+    console.log(user.household._id);
+    const householdData = await getHouseholdById(user.household);
+    let household;
+    if (householdData) {
+      household = {
+        members: householdData.members,
+        name: householdData.name,
+        isActive: householdData.isActive,
+      };
+    } else {
+      household = user.household;
+    }
     return {
       accessToken,
       refreshToken,
@@ -90,7 +102,7 @@ const loginUser = async function (userData) {
         _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
-        household: user.household,
+        household: household,
         role: user.role,
       },
     };

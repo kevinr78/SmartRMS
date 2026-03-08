@@ -65,11 +65,9 @@ api.interceptors.response.use(
         });
 
         setAccessToken(data.accessToken);
-        localStorage.setItem("accessToken", data.accessToken);
 
         api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
         processQueue(null, data.accessToken);
-
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);

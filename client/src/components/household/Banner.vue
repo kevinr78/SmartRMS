@@ -14,8 +14,11 @@
     </div>
     <MemberDetail :household="household" />
     <div className="divider"></div>
-    <!-- v-if="userRole === 'admin'"  -->
-    <div class="flex flex-col gap-2 text-left w-full">
+    <!--  -->
+    <div
+      v-if="userRole === 'admin'"
+      class="flex flex-col gap-2 text-left w-full"
+    >
       <AdminActions
         @handleButtonClick="
           (e) => {

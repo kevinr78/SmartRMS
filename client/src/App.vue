@@ -4,11 +4,16 @@
   </div>
 </template>
 <script setup>
-import BaseAuthView from './components/views/auth/BaseAuthView.vue';
-
+import BaseAuthView from "./components/views/auth/BaseAuthView.vue";
+import { useAuthStore } from "./store/auth/auth";
+import { storeToRefs } from "pinia";
+const authStore = useAuthStore();
+const { user, isAuthenticated, isLoading } = storeToRefs(authStore);
+console.log(user.value);
+console.log("App is refreshjed");
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 html {
   font-size: 16px;
 }
@@ -16,7 +21,7 @@ html {
   box-sizing: border-box;
 }
 #app {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -27,8 +32,9 @@ html {
   color: #58585e;
 }
 
-body, .main{
-  height: 100vh ;
+body,
+.main {
+  height: 100vh;
   background-color: #fafafa;
 }
 </style>
