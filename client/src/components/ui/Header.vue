@@ -1,5 +1,7 @@
 <template>
-  <header class="h-32 p-4 flex items-center">
-      <slot name="header"></slot>
+  <header
+    class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8"
+  >
+    <slot name="header"></slot>
   </header>
 </template>

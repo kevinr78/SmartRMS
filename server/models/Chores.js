@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const choreSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: [true, "Chore name is required"],
       trim: true,
@@ -79,7 +79,7 @@ const choreSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    deadline: {
+    dueDate: {
       type: Date,
     },
     pointValue: {

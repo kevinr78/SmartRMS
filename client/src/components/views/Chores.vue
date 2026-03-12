@@ -1,99 +1,55 @@
 <template>
-  <div class="flex flex-col gap-6 w-full max-w-4xl pb-10">
-    <header
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-    >
-      <div class="text-left">
-        <h2 class="text-2xl font-bold text-text-main">Chore Management</h2>
-        <p class="text-text-secondary text-sm">
-          Keep your household organized and clean.
-        </p>
-      </div>
-      <Button
-        variant="primary"
-        @button-click="changeModalComponent"
-        class="px-6 shadow-sm"
-      >
-        <template #icon><Plus size="18" /></template>
-        Add Chore
-      </Button>
-    </header>
-
-    <div class="flex flex-col gap-4">
-      <section
-        v-if="chores.length"
-        class="grid grid-cols-1 md:grid-cols-2 gap-4"
-      >
-        <div
-          v-for="chore in chores"
-          :key="chore._id"
-          class="bg-primary-light rounded-xl p-5 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
-        >
-          <div class="flex justify-between items-start">
-            <h3 class="font-bold text-text-main text-lg">{{ chore.name }}</h3>
-            <div>
-              <span
-                :class="getPriorityClass(chore.priority)"
-                class="badge border-none px-3 py-2 text-xs font-bold uppercase mr-2"
-              >
-                {{ chore.priority }}
-              </span>
-              <span
-                class="badge badge-base-eggshell border-none px-3 py-2 text-xs font-bold uppercase"
-              >
-                <Repeat2 :size="16" />
-                {{ chore.frequency }}
-              </span>
-            </div>
-          </div>
-
-          <p class="text-text-secondary text-sm text-left line-clamp-2">
-            {{ chore.instructions }}
-          </p>
-
+  <div class="flex flex-col gap-6 w-full pb-10">
+    <Header
+      v-model:search="filters.search"
+      @toggleView="viewType = $event"
+      @changeModal="changeModalComponent"
+      :currentView="viewType"
+    />
+    <Filters
+      :categories="CATEGORIES"
+      :options="PRIORITIES"
+      v-model:category="filters.category"
+      v-model:statuses="filters.status"
+    />
+    <transition name="fade" mode="out-in">
+      <div class="flex flex-col gap-4">
+        <section v-if="filteredChores.length">
           <div
-            class="flex items-center justify-between mt-2 pt-3 border-t border-border-light/40"
+            v-if="viewType === 'list'"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div class="flex items-start gap-2 flex-col">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-text-main">
-                  Assigned To - {{ chore.assignedTo?.fullName || "Unassigned" }}
-                </span>
-              </div>
-            </div>
-            <div class="flex gap-1">
-              <button
-                @click="editChore(chore)"
-                class="btn btn-ghost btn-xs text-text-secondary hover:text-primary"
-              >
-                <Edit2 size="14" />
-              </button>
-              <button
-                @click="confirmDelete(chore._id)"
-                class="btn btn-ghost btn-xs text-text-secondary hover:text-error"
-              >
-                <Trash size="14" />
-              </button>
-            </div>
+            <ChoreCard
+              v-for="chore in filteredChores"
+              :chore="chore"
+              @edit="editChore(chore)"
+              @delete="confirmDelete(chore._id)"
+            />
           </div>
-        </div>
-      </section>
+          <div
+            v-else
+            class="bg-primary-light p-6 rounded-2xl shadow-sm min-h-[500px]"
+          >
+            <Calendar @select="editChore($event)" :events="filteredChores" />
+          </div>
+        </section>
 
-      <section
-        v-else
-        class="bg-primary-light/50 rounded-xl p-12 text-center border-2 border-dashed border-primary/20"
-      >
-        <div
-          class="bg-base-main w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm"
+        <section
+          v-else
+          class="bg-primary-light/50 rounded-xl p-12 text-center border-2 border-dashed border-primary/20"
         >
-          <ClipboardCheck class="text-primary" size="32" />
-        </div>
-        <p class="text-text-main font-semibold">No chores found</p>
-        <p class="text-text-secondary text-sm mt-1">
-          Start by adding a new chore for your household.
-        </p>
-      </section>
-    </div>
+          <div
+            class="bg-base-main w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm"
+          >
+            <ClipboardCheck class="text-primary" size="32" />
+          </div>
+          <p class="text-text-main font-semibold">No chores found</p>
+          <p class="text-text-secondary text-sm mt-1">
+            Start by adding a new chore for your household.
+          </p>
+        </section>
+      </div>
+    </transition>
     <Modal
       :currentComponent="modalComponent"
       :component-properties="componentPropertiesRef"
@@ -103,30 +59,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { Plus, Edit2, Trash, ClipboardCheck, Repeat2 } from "lucide-vue-next";
+import { ref, onMounted, computed } from "vue";
+import { ClipboardCheck } from "lucide-vue-next";
+import Header from "../chores/Header.vue";
 import Button from "../ui/Button.vue";
 import api from "../../utils/axios";
 import { useApi } from "../../composables/useApi";
 import Modal from "../ui/Modal.vue";
 import ChoreForm from "../chores/ChoreForm.vue";
+import Filters from "../ui/Filters.vue";
+import ChoreCard from "../chores/ChoreCard.vue";
+import Calendar from "../ui/Calendar.vue";
+
 const modalComponent = ref(null);
 const componentPropertiesRef = ref({});
 const { apiCall } = useApi();
 const chores = ref([]);
 const isLoading = ref(false);
+const filters = ref({ search: "", category: "all", status: "all" });
+const viewType = ref("list");
+import { PRIORITIES, FREQUENCY, CATEGORIES } from "../chores/constants";
 
 const fetchData = async () => {
   const response = await apiCall(() => api.get("/chores"), {
     loadingRef: isLoading,
   });
   chores.value = response?.data?.data || [];
-};
-
-const getPriorityClass = (priority) => {
-  if (priority === "high") return "bg-error text-white";
-  if (priority === "medium") return "bg-warning text-white";
-  return "bg-success text-white";
 };
 
 function changeModalComponent(name) {
@@ -158,6 +116,21 @@ function editChore(chore) {
   };
   document.getElementById("my_modal_1").showModal();
 }
+
+const filteredChores = computed(() => {
+  return chores.value.filter((chore) => {
+    const matchSearch = chore.title
+      .toLowerCase()
+      .includes(filters.value.search.toLowerCase());
+    const matchCat =
+      filters.value.category === "all" ||
+      chore.category === filters.value.category;
+    const matchPriority =
+      filters.value.priority === "all" ||
+      chore.status === filters.value.priority;
+    return matchSearch && matchCat && matchPriority;
+  });
+});
 
 onMounted(fetchData);
 </script>

@@ -23,18 +23,14 @@
             v-model="formData.category"
             class="select bg-base-main border-none shadow-sm"
           >
-            <option
-              v-for="cat in [
-                'Electricity',
-                'Water',
-                'Internet',
-                'Rent',
-                'Other',
-              ]"
-              :key="cat"
+            <template
+              v-for="{ value, text, showInForm } in CATEGORIES"
+              :key="value"
             >
-              {{ cat }}
-            </option>
+              <option :value="value" v-if="showInForm">
+                {{ text }}
+              </option>
+            </template>
           </select>
         </div>
       </div>
@@ -61,9 +57,14 @@
           v-model="formData.frequency"
           class="select bg-base-main border-none shadow-sm w-full"
         >
-          <option value="weekly">Weekly</option>
-          <option value="bi-weekly">Bi-Weekly</option>
-          <option value="monthly">Monthly</option>
+          <template
+            v-for="{ value, text, showInForm } in FREQUENCY"
+            :key="value"
+          >
+            <option :value="value" v-if="showInForm">
+              {{ text }}
+            </option>
+          </template>
         </select>
       </div>
 
@@ -120,6 +121,7 @@ import api from "../../utils/axios";
 import { useApi } from "../../composables/useApi";
 import { useAuth } from "../../composables/useAuth";
 const { apiCall } = useApi();
+import { CATEGORIES, FREQUENCY, OPTIONS } from "./constants";
 const emit = defineEmits(["updateEvent"]);
 const isLoading = ref(false);
 const { authUser } = useAuth();

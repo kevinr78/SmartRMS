@@ -10,9 +10,9 @@
       <div class="flex flex-col sm:flex-row gap-4">
         <Input
           label="Chore Title"
-          name="name"
+          name="title"
           placeholder="e.g., Clean the Kitchen"
-          v-model="formData.name"
+          v-model="formData.title"
           :isRequired="true"
           class="w-full"
         />
@@ -25,9 +25,14 @@
             v-model="formData.priority"
             class="select w-full bg-base-main shadow-sm border-none focus:ring-2 focus:ring-primary"
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <template
+              v-for="{ value, text, showInForm } in PRIORITIES"
+              :key="value"
+            >
+              <option :value="value" v-if="showInForm">
+                {{ text }}
+              </option>
+            </template>
           </select>
         </div>
       </div>
@@ -54,15 +59,14 @@
             v-model="formData.category"
             class="select w-full bg-base-main shadow-sm border-none focus:ring-2 focus:ring-primary"
           >
-            <option value="cleaning">Cleaning</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="shopping">Shopping</option>
-            <option value="kitchen">Kitchen</option>
-            <option value="bathroom">Bathroom</option>
-            <option value="shopping">Laundry</option>
-            <option value="pets">Pets</option>
-            <option value="outdoor">Outdoor</option>
-            <option value="other">Other</option>
+            <template
+              v-for="{ value, text, showInForm } in CATEGORIES"
+              :key="value"
+            >
+              <option :value="value" v-if="showInForm">
+                {{ text }}
+              </option>
+            </template>
           </select>
         </div>
 
@@ -97,11 +101,14 @@
             v-model="formData.frequency"
             class="select w-full bg-base-main shadow-sm border-none focus:ring-2 focus:ring-primary"
           >
-            <option value="once">Once</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="bi-weekly">Bi-Weekly</option>
-            <option value="monthly">Monthly</option>
+            <template
+              v-for="{ value, text, showInForm } in FREQUENCY"
+              :key="value"
+            >
+              <option :value="value" v-if="showInForm">
+                {{ text }}
+              </option>
+            </template>
           </select>
         </div>
 
@@ -109,7 +116,7 @@
           label="Deadline"
           name="deadline"
           type="date"
-          v-model="formData.deadline"
+          v-model="formData.dueDate"
           class="w-full"
         />
       </div>
@@ -133,7 +140,7 @@ import Button from "../ui/Button.vue";
 import { useAuth } from "../../composables/useAuth";
 import { useApi } from "../../composables/useApi";
 import api from "../../utils/axios";
-
+import { FREQUENCY, PRIORITIES, CATEGORIES } from "./constants";
 const { authUser } = useAuth();
 const { apiCall } = useApi();
 const attrs = useAttrs();
@@ -144,26 +151,26 @@ const isLoading = ref(false);
 const householdMembers = authUser.value?.household?.members || [];
 
 const formData = ref({
-  name: "",
+  title: "",
   instructions: "",
   priority: "medium",
   category: "cleaning",
   assignedTo: null,
   frequency: "once",
-  deadline: "",
+  dueDate: "",
 });
 
 onMounted(() => {
   const choreData = attrs.componentProperties?.choreData;
   if (isEdit.value && choreData) {
     formData.value = {
-      name: choreData.name || "",
+      title: choreData.title || "",
       instructions: choreData.instructions || "",
       priority: choreData.priority || "medium",
       category: choreData.category || "cleaning",
       assignedTo: choreData.assignedTo?._id || choreData.assignedTo || null,
       frequency: choreData.frequency || "once",
-      deadline: choreData.deadline ? choreData.deadline.split("T")[0] : "",
+      dueDate: choreData.dueDate ? choreData.dueDate.split("T")[0] : "",
     };
   }
 });
